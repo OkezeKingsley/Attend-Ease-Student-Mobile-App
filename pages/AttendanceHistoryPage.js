@@ -54,8 +54,22 @@ function AttendanceHistoryPage () {
         }
 
       } catch (error) {
-        console.error('Error fetching attendance:', error.message);
-        Alert.alert('Error', error.message);
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.error;
+  
+          if (status === 400 || status === 404 || status === 500) {
+            Alert.alert('Error', message);
+          } else if (status === 401) {
+            navigation.replace('Login');
+          } else { Alert.alert('Error', 'An unexpected error occurred!'); }
+      
+        } else {
+          console.log(error)
+          Alert.alert('Error', 'An unknown error occurred!');
+        }
+
+
       }
     };
 
@@ -72,16 +86,7 @@ function AttendanceHistoryPage () {
     return date.toISOString().split('T')[1].substring(0, 5);
   };
 
-  // const renderItem = ({ item }) => (
-  //   <View key={item._id} style={styles.itemContainer}>
-  //     <View style={styles.itemHeader}>
-  //       <Text style={styles.className}>{item.className}</Text>
-  //       <Text style={[styles.status, {color: item.status === 'Present' ? 'green' : 'red'}]}>{item.status}</Text>
-  //     </View>
-  //     <Text style={styles.date}>{formatDate(item.date)} at {formatTime(item.time)}</Text>
-  //   </View>
-  // );
-
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Attendance History</Text>

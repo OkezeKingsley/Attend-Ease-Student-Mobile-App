@@ -91,7 +91,6 @@ function QRCodeScannerPage () {
       const studentId = await AsyncStorage.getItem('studentId');
   
       if (!token || !studentId) {
-        // navigation.navigate('FailurePage', { message: 'Missing token or student ID' });
         navigation.replace('Login');
         return;
       }
@@ -120,15 +119,13 @@ function QRCodeScannerPage () {
         if (status === 400 || status === 404 || status === 403 || status === 500) {
           navigation.navigate('FailurePage', { message: errorMessage });
         } else if (status === 401) {
-          console.log("Authorizaton unsuccessful!")
-          navigation.navigate('LoginPage');
+          navigation.replace('Login');
         } else if (status === 409) {
           navigation.navigate('AlreadyMarkedPage', { message: errorMessage });
         } else {
           navigation.navigate('FailurePage', { message: "An unexpected error occurred" });
         }
       } else {
-        console.log("why it wont work", error)
         navigation.navigate('FailurePage', { message: "An unknown error occurred!" });
       }
     } finally { 
